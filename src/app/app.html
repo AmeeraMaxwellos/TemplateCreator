@@ -3,7 +3,7 @@
     <h2>Document Settings</h2>
     <form class="template-form">
       <div class="form-group">
-        <label for="letterhead">Company Logo</label>
+        <label for="letterhead">Company Letterhead</label>
         <input type="file" id="letterhead" accept="image/*" (change)="onFileSelected($event)" class="file-input">
       </div>
       
@@ -38,22 +38,27 @@
         <input type="number" id="amount" name="amount" [(ngModel)]="data.amount" placeholder="0.00">
       </div>
 
-      <button type="button" class="btn-primary" (click)="printDocument()">Print / Save PDF</button>
+      <div class="button-group">
+        <button type="button" class="btn-success" (click)="downloadPDF()">Download PDF</button>
+        <button type="button" class="btn-primary" (click)="printDocument()">Print</button>
+        <button type="button" class="btn-danger" (click)="clearForm()">Clear</button>
+      </div>
     </form>
   </aside>
 
   <main class="preview">
     <div class="a4-page">
-      <header class="doc-header">
-        <div class="logo-container">
-          <img *ngIf="data.letterhead; else logoPlaceholder" [src]="data.letterhead" alt="Company Logo" class="logo">
-          <ng-template #logoPlaceholder>
-            <div class="placeholder-logo">Upload Logo</div>
-          </ng-template>
-        </div>
-        <div class="company-info" *ngIf="data.companyName">
-          <h1>{{ data.companyName }}</h1>
-        </div>
+      <header class="doc-header" [class.has-letterhead]="!!data.letterhead">
+        <ng-container *ngIf="data.letterhead; else defaultHeader">
+          <img [src]="data.letterhead" alt="Company Letterhead" class="letterhead-image">
+        </ng-container>
+
+        <ng-template #defaultHeader>
+          <div class="placeholder-letterhead">Upload Letterhead Image (Full Width)</div>
+          <div class="company-info" *ngIf="data.companyName">
+            <h1>{{ data.companyName }}</h1>
+          </div>
+        </ng-template>
       </header>
 
       <div class="doc-body">
